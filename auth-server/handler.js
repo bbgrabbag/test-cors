@@ -2,7 +2,7 @@
 
 let {google} = require('googleapis');
 // let OAuth2 = google.auth.OAuth2;
-let calendar = google.calendar('v2');
+let calendar = google.calendar('v3');
 
 let scopes = ["https://www.googleapis.com/auth/calendar.readonly"];
 
