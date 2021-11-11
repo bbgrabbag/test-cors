@@ -2,7 +2,7 @@
 
 let {google} = require('googleapis');
 // let OAuth2 = google.auth.OAuth2;
-// let calendar = google.calendar('v2');
+let calendar = google.calendar('v2');
 
 let scopes = ["https://www.googleapis.com/auth/calendar.readonly"];
 
@@ -19,7 +19,7 @@ let credentials = {
   redirect_uris: ["https://artincf93.github.io/Meetupp-app/"],
   javascript_origins: ["https://artincf93.github.io", "http://localhost:8080", "http://localhost:3000"],
 };
-let {client_secret, client_id, redirect_uris} = credentials;
+let {client_secret, client_id, redirect_uris, calendar_id} = credentials;
 let oAuth2Client = new google.auth.OAuth2(
   client_id,
   client_secret,
@@ -44,6 +44,7 @@ module.exports.getAuthURL = async() => {
   };
 };
 
+
 module.exports.getAccessToken = async(event) => {
   let oAuth2Client = new google.auth.OAuth2(
     client_id,
@@ -63,6 +64,50 @@ module.exports.getAccessToken = async(event) => {
       return {
         statusCode: 200,
         body: JSON.stringify(token),
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
+      };
+    })
+    .catch((err) => {
+      console.error(err);
+      return {
+        statusCode: 500,
+        body: JSON.stringify(err),
+      };
+    })
+}
+
+
+module.exports.getCalendarEvents = async(event) => {
+  let oAuth2Client = new google.auth.OAuth2(
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  );
+  let access_token = decodeURIComponent(`${event.pathParameters.access_token}`);
+  oAuth2Client.setCredentials({ access_token });
+  return new Promise((resolve, reject) => {
+    calendar.events.list(
+      {
+        calendarId: calendar_id,
+        auth: oAuth2Client,
+        timeMin: new Date().toISOString(),
+        singleEvents: true,
+        orderBy: "startTime",
+      },
+      (error, response) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    );
+  }).then((results) => {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ events: results.data.items }),
         headers: {
           'Access-Control-Allow-Origin': '*'
         },
