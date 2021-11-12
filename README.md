@@ -29,7 +29,7 @@ Scenario 2: User can collapse an event to hide its details
 FEATURE 3: SPECIFY NUMBER OF EVENTS
     As a user 
     I should be able to display a certain number of events page by page 
-    So I can see more of fewer events in the ecents list at once
+    So I can see more or fewer events in the events list at once
 
 Scenario 1: When user hasn’t specified a number, 32 is the default number 
     Given the user has not specified a number When the user is on the home page
