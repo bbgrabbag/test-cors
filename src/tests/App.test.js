@@ -5,6 +5,7 @@ import { shallow } from 'enzyme';
 import App from '../App'; //need to import the actual file being tested
 import EventList from '../EventList';
 import CitySearch from '../CitySearch';
+import NumberOfEvents from '../NumberOfEvents';
 
 // test outline
 // test('test description', () => {
@@ -28,4 +29,11 @@ describe('<App /> component', () => {
     test('render CitySearch', () => {
         expect(AppWrapper.find(CitySearch)).toHaveLength(1)
     })
+
+    //test3
+    test('render NumberOfEvents', () => {
+        expect(AppWrapper.find(NumberOfEvents)).toHaveLength(1)
+    })
 });
+
+//test
