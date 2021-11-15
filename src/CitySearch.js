@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import './css/CitySearch.css'
 // import { mockData } from './mock-data';
 
 class CitySearch extends Component {
@@ -26,28 +27,34 @@ class CitySearch extends Component {
   //User Can Select a City from the List of Suggestions
   handleItemClicked = (suggestion) => {
     this.setState({
-      query:suggestion
+      query: suggestion,
+      suggestions: [],
+      showSuggestions: false
     });
+    this.props.updateEvents(suggestion);
   }
 
   render() {
     return (
       <div className='CitySearch'>
+        <p>City Filter</p>
         <input
           type='text'
           className='city'
           //the value of state is query
           value={this.state.query}
           onChange={this.handleInputChanged}
+          onFocus={() => { this.setState({ showSuggestions: true }) }}
         />
-        <ul className="suggestions">
+        <ul className="suggestions" style={this.state.showSuggestions ? {}: { display: 'none' }}>
           {this.state.suggestions.map((suggestion) => (
             <li
-            key={suggestion}
-            onClick={() => this.handleItemClicked(suggestion)}
-          >{suggestion}</li>
+              key={suggestion}
+              onClick={() => this.handleItemClicked(suggestion)}>
+              {suggestion}
+            </li>
           ))}
-          <li key='all'>
+          <li onClick={() => this.handleItemClicked("all")}>
             <b>See all cities</b>
           </li>
         </ul>

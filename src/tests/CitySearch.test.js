@@ -4,6 +4,7 @@ import CitySearch from '../CitySearch';
 import { mockData } from '../mock-data';
 import { extractLocations } from '../api';
 
+
 // test outline
 // test('test description', () => {
 //  expect(someFunction()).toBe(somevalue);
@@ -15,7 +16,7 @@ describe('<CitySearch /> component', () => {
     let locations;
     beforeAll(() => {
         locations = extractLocations(mockData);
-        CitySearchWrapper = shallow(<CitySearch locations={locations}/>)
+        CitySearchWrapper = shallow(<CitySearch locations={locations} updateEvents={() => {}}/>)
     });
 
     //test1
@@ -89,4 +90,24 @@ describe('<CitySearch /> component', () => {
         CitySearchWrapper.find('.suggestions li').at(0).simulate('click');
         expect(CitySearchWrapper.state('query')).toBe(suggestions[0]);
     });
+
+
+    //test8
+    test('selecting CitySearch input reveals the suggestions list', () => {
+        CitySearchWrapper.find('.city').simulate('focus');
+        expect(CitySearchWrapper.state('showSuggestions')).toBe(true);
+        expect(CitySearchWrapper.find('.suggestions').prop('style')).not.toEqual({display:'none'});
+    });
+
+
+    //test9
+    test('selecting a suggestion should hide the suggestions list', () => {
+        CitySearchWrapper.setState({
+            query: 'Berlin',
+            showSuggestions: undefined
+        });
+        CitySearchWrapper.find('.suggestions li').at(0).simulate('click');
+        expect(CitySearchWrapper.state('showSuggestions')).toBe(false);
+        expect(CitySearchWrapper.find('.suggestions').prop('style')).toEqual({display: 'none'})
+    })
 });
