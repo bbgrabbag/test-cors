@@ -20,5 +20,3 @@ describe('<EventList /> component', () => {
         expect(EventListWrapper.find(Event)).toHaveLength(mockData.length) //how many EventList components exist within AppWrapper (the react component; <App />)
     });
 });
-
-//test

@@ -111,3 +111,5 @@ describe('<CitySearch /> component', () => {
         expect(CitySearchWrapper.find('.suggestions').prop('style')).toEqual({display: 'none'})
     })
 });
+
+//

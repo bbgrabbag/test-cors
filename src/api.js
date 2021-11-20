@@ -45,30 +45,30 @@ export let extractLocations = (events) => {
   };
 
 
-export let getEvents = async () => {
+  export let getEvents = async () => {
     NProgress.start();
-
-    if(window.location.href.startsWith('http//localhost')){
-        NProgress.done();
-        return mockData;
+  
+    if (window.location.href.startsWith("http://localhost")) {
+      NProgress.done();
+      return mockData;
     }
-
+  
+  
     let token = await getAccessToken();
-
-    if(token) {
-        removeQuery();
-        let url = `https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/get-events/${token}`;
-        let result = await axios.get(url);
-
-        if(result.data) {
-            let locations = extractLocations(result.data.events);
-            localStorage.setItem('lastEvents', JSON.stringify(result.data));
-            localStorage.setItem('locations', JSON.stringify(locations));
-        }
-        NProgress.done();
-        return result.data.events;
-        }
-    };
+  
+    if (token) {
+      removeQuery();
+      let url = 'https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/' + token;
+      let result = await axios.get(url);
+      if (result.data) {
+        var locations = extractLocations(result.data.events);
+        localStorage.setItem("lastEvents", JSON.stringify(result.data));
+        localStorage.setItem("locations", JSON.stringify(locations));
+      }
+      NProgress.done();
+      return result.data.events;
+    }
+  };
 
 
 export let getAccessToken = async () => {
@@ -94,7 +94,7 @@ return accessToken;
 let getToken = async (code) => {
     let encodeCode = encodeURIComponent(code);
     let {access_token} = await fetch(
-        `https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/${encodeCode}`
+        'https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/' + encodeCode
     )
     .then((res) => {
         return res.json();

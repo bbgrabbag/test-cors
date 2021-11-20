@@ -11,23 +11,7 @@ Scenario 2: User should see a list of suggestions when they search for a city.
 Scenario 3: User can select a city from the suggested list. 
     Given the user was typing “Berlin” in the city textbox And the list of suggested cities is showing When the user selects a city (e.g., “Berlin, Germany”) from the list Then their city should be changed to that city (i.e., “Berlin, Germany”) And the user should receive a list of upcoming events in that city
 
-
-FEATURE 2: SPECIFY NUMBER OF EVENTS
-    As a user 
-    I should be able to display a certain number of events page by page 
-    So I can see more or fewer events in the events list at once
-
-Scenario 1: When user hasn’t specified a number, 32 is the default number 
-    Given the user has not specified a number When the user is on the home page
-    Then the screen will automatically return 32 events per page
-
-Scenario 2: User can change the number of events they want to see 
-    Given the user has specified a number
-    When the user is on the home page
-    Then the screenwill return the indicated number of events per page
-    
-    
-Ex. 1 Start FEATURE 3: SHOW/HIDE AN EVENT'S DETAILS
+Ex. 1 Start FEATURE 2: SHOW/HIDE AN EVENT'S DETAILS
     As a user 
     I should be able to show and hide an event's details 
     So that I can view details of a single event one at a time and move on to another specific event conventiently
@@ -40,6 +24,21 @@ Scenario 1: User can expand an event to see its details
 Scenario 2: User can collapse an event to hide its details 
     Given the screen displays a view of a single event's detials. 
     When the user clicks the x or back button Then the screen should return to a list of all events
+
+
+FEATURE 3: SPECIFY NUMBER OF EVENTS
+    As a user 
+    I should be able to display a certain number of events page by page 
+    So I can see more or fewer events in the events list at once
+
+Scenario 1: When user hasn’t specified a number, 32 is the default number 
+    Given the user has not specified a number When the user is on the home page
+    Then the screen will automatically return 32 events per page
+
+Scenario 2: User can change the number of events they want to see 
+    Given the user has specified a number
+    When the user is on the home page
+    Then the screenwill return the indicated number of events per page
 
 
 FEATURE 4: USE THE APP WHEN OFFLINE

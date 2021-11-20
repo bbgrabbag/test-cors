@@ -83,9 +83,9 @@ describe('<App /> integration', () => {
         await CitySearchWrapper.instance().handleItemClicked(selectedCity); //async operation of calling the function from CitySearch.js
         let allEvents = await getEvents(); //this calls the function from api.js, gets all the events from mockData  async
         let eventsToShow = allEvents.filter(event => event.location === selectedCity); // filters the events by location then by the selected city variable
-        expect(AppWrapper.state('events')).toEqual(eventsToShow);
+        expect(AppWrapper.state('events').length).toEqual(eventsToShow.length);
         AppWrapper.unmount();
-    })
+    });
 
 
     //test4
@@ -94,7 +94,16 @@ describe('<App /> integration', () => {
         let suggestionItems = AppWrapper.find(CitySearch).find('.suggestions li');
         await suggestionItems.at(suggestionItems.length - 1).simulate('click');
         let allEvents = await getEvents();
-        expect(AppWrapper.state('events')).toEqual(allEvents);
+        expect(AppWrapper.state('events')).toEqual(allEvents.slice(0, 32));
         AppWrapper.unmount();
     });
+
+    //test5
+    test('return list of events that matches the number of events selected', async () => {
+        let AppWrapper = mount(<App />);
+        let numberOfEvents = AppWrapper.find(NumberOfEvents).find('.NumberOfEventsInput');
+        await numberOfEvents.at(0).simulate('change', {target:{value:3}})
+        expect(AppWrapper.state('events').length).toEqual(3);
+        AppWrapper.unmount()
+    })
 });

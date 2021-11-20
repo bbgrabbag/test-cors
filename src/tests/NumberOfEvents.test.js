@@ -17,11 +17,11 @@ describe('<NumberOfEvents /> component', () => {
     //test2
     test('change state when number input changes', () => {
         NumberOfEventsWrapper.setState({
-            inputValue: 32
+            NumberOfEvents: 32
         });
         let eventObject = { target: { value: 15 } }; //setting the value in CitySearch.js
         NumberOfEventsWrapper.find('.NumberOfEventsInput').simulate('change', eventObject);
-        expect(NumberOfEventsWrapper.state('inputValue')).toBe(15);
+        expect(NumberOfEventsWrapper.state('numberOfEvents')).toBe(15);
     });
 
 });
