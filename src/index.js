@@ -4,6 +4,10 @@ import './css/index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+
+import * as atatus from 'atatus-spa';
+atatus.config('4f3d1b1955a74da8b75f307a5ef19359').install();
+
 // let express = require('express');
 // let app = express();
 

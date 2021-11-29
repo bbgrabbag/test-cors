@@ -4,45 +4,48 @@ import puppeteer from "puppeteer";
 
 
 describe('show/hide an event details', () => {
-    let browser;
-    let page;
 
     beforeAll(async () => {
-        browser = await puppeteer.launch({
-            headless: false,
-            slowMo: 250,
-            ignoreDefaultArgs: ['--disable-extensions'] //ignores default setting that causes timeout errors 
-        }); //this launches the browser 
-        page = await browser.newPage();
-        await page.goto('http://localhost:3000/'); //this specifies what web page to navigate to
-
-        //this method ensures that the desired element appears, before moving on
-        await page.waitForSelector('.event');
-      });
-
-    afterAll(() => {
-        browser.close()
+        jest.setTimeout(30000);
     });
-
 
     //test1
     test('An event element is collapsed by default', async() =>{
+        let browser = await puppeteer.launch(); //this first launches the browser
 
-    let eventDetails = await page.$('.event .event_Details');//this selects an element on the page
-    expect(eventDetails).toBeNull();//this is to determine whether the element exsts or no
-    })
+        let page = await browser.newPage(); //instructs the browser to open a new page
+        await page.goto('http://localhost:3000/'); //instructs the browser to open the test in the speciifed link
+
+        await page.waitForSelector('.event');
+
+        //Puppeteer provides the method page.$() for selecting an element on the page. 
+        let eventDetails = await page.$('.event .eventDetails');
+        expect(eventDetails).toBeNull();
+        browser.close();
+    });
 
     //test2
     test('User can expand an event to see its details', async () => {
-        await page.click('.event .details-btn');
-        let eventDetails = await page.$('.event .event_Details');
+        let browser = await puppeteer.launch();
+        let page = await browser.newPage();
+        await page.goto('http://localhost:3000/');
+    
+        await page.waitForSelector('.event');
+        await page.click('.event .showDetails');
+    
+        let eventDetails = await page.$('.event .event__Details');
         expect(eventDetails).toBeDefined();
+        browser.close();
       });
 
-    //test3
-    test('User can collapse an event to hide its details', async()=>{
-        await page.click('.event .details-btn');
-        let eventDetails = await page.$('.event .event_Details')
+      //test3
+      test('User can collapse an event to hide its details', async () => {
+        let browser = await puppeteer.launch();
+        let page = await browser.newPage();
+        await page.goto('http://localhost:3000/');
+        await page.click('.event .showDetails');
+        const eventDetails = await page.$('.event .event__Details');
         expect(eventDetails).toBeNull();
-    })
+        browser.close();
+      });
 });

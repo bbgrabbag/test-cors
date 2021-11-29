@@ -1,12 +1,13 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import NumberOfEvents from '../NumberOfEvents';
+let updateEventCount = jest.fn();
 
 
 describe('<NumberOfEvents /> component', () => {
     let NumberOfEventsWrapper;
     beforeAll(() => {
-        NumberOfEventsWrapper = shallow(<NumberOfEvents />)
+        NumberOfEventsWrapper = shallow(<NumberOfEvents updateEventCount={updateEventCount}/>)
     });
 
     //test1
@@ -21,7 +22,7 @@ describe('<NumberOfEvents /> component', () => {
         });
         let eventObject = { target: { value: 15 } }; //setting the value in CitySearch.js
         NumberOfEventsWrapper.find('.NumberOfEventsInput').simulate('change', eventObject);
-        expect(NumberOfEventsWrapper.state('numberOfEvents')).toBe(15);
+        expect(updateEventCount).toBeCalledWith(15);
     });
 
 });
