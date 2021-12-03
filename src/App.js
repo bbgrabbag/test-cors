@@ -16,7 +16,7 @@ class App extends Component {
     events: [],
     locations: [],
     currentLocation: 'all',
-    numberOfEvents: 32,
+    numberOfEvents: 32
   }
 
   updateEvents = (location, eventCount) => {
@@ -63,6 +63,7 @@ class App extends Component {
   }
   
   render() {
+    
 
     return (
       <div className="App">

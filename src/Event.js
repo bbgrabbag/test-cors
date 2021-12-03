@@ -26,6 +26,7 @@ class Event extends Component {
       } else {
         return <div className='event_info'>
         {event.description}
+        <br></br>
         {/* {event.start.dateTime} */}
         <button className='closeDetails' onClick={this.handleClick}>Close details</button>
       </div>

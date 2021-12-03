@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import './css/CitySearch.css'
+import {InfoAlert} from './Alert';
 // import { mockData } from './mock-data';
 
 class CitySearch extends Component {
@@ -17,10 +18,18 @@ class CitySearch extends Component {
     let suggestions = this.props.locations.filter((location) => {
       return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
     });
-    this.setState({
-      query: value,
-      suggestions,
-    });
+    if (suggestions.length === 0) {
+      this.setState({
+        query: value,
+        infoText: 'We can not find the city you are looking for. Please try another city',
+      });
+    } else {
+      return this.setState({
+        query: value,
+        suggestions,
+        infoText:''
+      });
+    }
   };
 
   //part of scenario 3 of feature 1
@@ -37,7 +46,9 @@ class CitySearch extends Component {
   render() {
     return (
       <div className='CitySearch'>
-        <p>City Filter</p>
+        <br></br>
+        <br></br>
+        <InfoAlert text={this.state.infoText} />
         <input
           type='text'
           className='city'
@@ -46,6 +57,7 @@ class CitySearch extends Component {
           onChange={this.handleInputChanged}
           onFocus={() => { this.setState({ showSuggestions: true }) }}
         />
+        <p>City Filter</p>
         <ul className="suggestions" style={this.state.showSuggestions ? {}: { display: 'none' }}>
           {this.state.suggestions.map((suggestion) => (
             <li
