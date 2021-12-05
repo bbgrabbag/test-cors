@@ -18,7 +18,7 @@ let removeQuery = () => {
     }
 };
 
-let checkToken = async(accessToken) => {
+export let checkToken = async(accessToken) => {
     let result = await fetch(
         `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
     )
@@ -45,7 +45,7 @@ export let extractLocations = (events) => {
   };
 
 
-  export let getEvents = async () => {
+  export let getEvents = async (events) => {
     NProgress.start();
   
     if (window.location.href.startsWith("http://localhost")) {
@@ -53,7 +53,12 @@ export let extractLocations = (events) => {
       return mockData;
     }
   
-  
+    if (!navigator.onLine) {
+        const data = localStorage.getItem("lastEvents");
+        NProgress.done();
+        return data?JSON.parse(events).events:[];;
+      }
+
     let token = await getAccessToken();
   
     if (token) {
