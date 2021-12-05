@@ -6,8 +6,9 @@ import './css/nprogress.css';
 import EventList from './EventList';
 import CitySearch from './CitySearch';
 import NumberOfEvents from './NumberOfEvents';
+import WelcomeScreen from './WelcomeScreen';
 
-import { getEvents, extractLocations } from './api';
+import { getEvents, extractLocations, checkToken, getAccessToken } from './api';
 
 
 class App extends Component {
@@ -16,7 +17,8 @@ class App extends Component {
     events: [],
     locations: [],
     currentLocation: 'all',
-    numberOfEvents: 32
+    numberOfEvents: 32,
+    showWelcomeScreen: undefined
   }
 
   updateEvents = (location, eventCount) => {
@@ -49,6 +51,13 @@ class App extends Component {
 
   componentDidMount() {
     this.mounted = true;
+    let accessToken = localStorage.getItem('access_token');
+
+    //the checkToken() checks whether the 'accessToken' is true or false and assign it to this variable
+    let isTokenValid = (checkToken(accessToken)).error ? false : true; 
+    let searchParams = new URLSearchParams(window.location.search);
+    let code = searchParams.get('code');
+    this.setState({showWelcomeScreen: !(code || isTokenValid)});
     getEvents().then((events) => {
       if (this.mounted) {
         this.setState({ 
@@ -63,6 +72,13 @@ class App extends Component {
   }
   
   render() {
+
+    let showWelcomeScreen = this.state.showWelcomeScreen;
+
+    if(showWelcomeScreen === undefined) 
+      return <div className='App'>
+          <WelcomeScreen />
+        </div>
     
 
     return (
@@ -77,6 +93,10 @@ class App extends Component {
           updateEventCount={this.updateEventCount}
         />
         <EventList events={this.state.events}/>
+        <WelcomeScreen 
+          showWelcomeScreen={showWelcomeScreen}
+          getAccessToken={() => {getAccessToken()}}
+        />
       </div>
     );
   }
