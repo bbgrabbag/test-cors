@@ -16,8 +16,8 @@ let credentials = {
   auth_uri: "https://accounts.google.com/o/oauth2/auth",
   token_uri: "https://oauth2.googleapis.com/token",
   auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  redirect_uris: ["https://artincf93.github.io/Meetupp-app/"],
-  javascript_origins: ["https://artincf93.github.io", "http://localhost:8080", "http://localhost:3000"],
+  redirect_uris: ["https://Artincf93.github.io/Meetupp-app/"],
+  javascript_origins: ["https://Artincf93.github.io", "http://localhost:8080", "http://localhost:3000"],
 };
 let {client_secret, client_id, redirect_uris, calendar_id} = credentials;
 let oAuth2Client = new google.auth.OAuth2(
