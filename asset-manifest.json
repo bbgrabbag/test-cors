@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/Meetupp-app/static/css/main.50b01b5c.chunk.css",
+    "main.js": "/Meetupp-app/static/js/main.4df1fa7a.chunk.js",
+    "main.js.map": "/Meetupp-app/static/js/main.4df1fa7a.chunk.js.map",
+    "runtime-main.js": "/Meetupp-app/static/js/runtime-main.4ba43e8b.js",
+    "runtime-main.js.map": "/Meetupp-app/static/js/runtime-main.4ba43e8b.js.map",
+    "static/js/2.24bef87c.chunk.js": "/Meetupp-app/static/js/2.24bef87c.chunk.js",
+    "static/js/2.24bef87c.chunk.js.map": "/Meetupp-app/static/js/2.24bef87c.chunk.js.map",
+    "static/js/3.29ca4834.chunk.js": "/Meetupp-app/static/js/3.29ca4834.chunk.js",
+    "static/js/3.29ca4834.chunk.js.map": "/Meetupp-app/static/js/3.29ca4834.chunk.js.map",
+    "index.html": "/Meetupp-app/index.html",
+    "service-worker.js": "/Meetupp-app/service-worker.js",
+    "service-worker.js.map": "/Meetupp-app/service-worker.js.map",
+    "static/css/main.50b01b5c.chunk.css.map": "/Meetupp-app/static/css/main.50b01b5c.chunk.css.map",
+    "static/js/2.24bef87c.chunk.js.LICENSE.txt": "/Meetupp-app/static/js/2.24bef87c.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4ba43e8b.js",
+    "static/js/2.24bef87c.chunk.js",
+    "static/css/main.50b01b5c.chunk.css",
+    "static/js/main.4df1fa7a.chunk.js"
+  ]
+}
