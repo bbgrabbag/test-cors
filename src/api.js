@@ -1,31 +1,31 @@
-import {mockData} from './mock-data';
+import { mockData } from './mock-data';
 import axios from 'axios';
 import NProgress from 'nprogress';
 
 
 // this function checks whether there is a path, then build the url with the current path
 let removeQuery = () => {
-    if(window.history.pushState && window.location.pathname) {
-        let newurl = 
-            window.location.protocol + 
-            '//' +
-            window.location.host +
-            window.location.pathname;
-            window.history.pushState('', '', newurl);
-    } else {
-        let newurl = window.location.protocol + '//' + window.location.host;
-        window.history.pushState('', '', newurl);
-    }
+  if (window.history.pushState && window.location.pathname) {
+    let newurl =
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      window.location.pathname;
+    window.history.pushState('', '', newurl);
+  } else {
+    let newurl = window.location.protocol + '//' + window.location.host;
+    window.history.pushState('', '', newurl);
+  }
 };
 
-export let checkToken = async(accessToken) => {
-    let result = await fetch(
-        `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
-    )
-    .then((res)=>res.json())
-    .catch((error)=>error.json());
+export let checkToken = async (accessToken) => {
+  let result = await fetch(
+    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
+  )
+    .then((res) => res.json())
+    .catch((error) => error.json());
 
-    return result;
+  return result;
 }
 
 /**
@@ -39,74 +39,75 @@ export let checkToken = async(accessToken) => {
 
 
 export let extractLocations = (events) => {
-    let extractLocations = events.map((event) => event.location);
-    let locations = [...new Set(extractLocations)];
-    return locations;
-  };
+  let extractLocations = events.map((event) => event.location);
+  let locations = [...new Set(extractLocations)];
+  return locations;
+};
 
 
-  export let getEvents = async (events) => {
-    NProgress.start();
-  
-    if (window.location.href.startsWith("http://localhost")) {
-      NProgress.done();
-      return mockData;
+export let getEvents = async (events) => {
+  NProgress.start();
+
+  if (window.location.href.startsWith("http://localhost")) {
+    NProgress.done();
+    return mockData;
+  }
+
+  if (!navigator.onLine) {
+    const data = localStorage.getItem("lastEvents");
+    NProgress.done();
+    return data ? JSON.parse(events).events : [];;
+  }
+
+  let token = await getAccessToken();
+
+  if (token) {
+    removeQuery();
+    let url = 'https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/' + token;
+    let result = await axios.get(url);
+    if (result.data) {
+      var locations = extractLocations(result.data.events);
+      localStorage.setItem("lastEvents", JSON.stringify(result.data));
+      localStorage.setItem("locations", JSON.stringify(locations));
     }
-  
-    if (!navigator.onLine) {
-        const data = localStorage.getItem("lastEvents");
-        NProgress.done();
-        return data?JSON.parse(events).events:[];;
-      }
-
-    let token = await getAccessToken();
-  
-    if (token) {
-      removeQuery();
-      let url = 'https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/' + token;
-      let result = await axios.get(url);
-      if (result.data) {
-        var locations = extractLocations(result.data.events);
-        localStorage.setItem("lastEvents", JSON.stringify(result.data));
-        localStorage.setItem("locations", JSON.stringify(locations));
-      }
-      NProgress.done();
-      return result.data.events;
-    }
-  };
+    NProgress.done();
+    return result.data.events;
+  }
+};
 
 
 export let getAccessToken = async () => {
-    let accessToken = localStorage.getItem('access_token');
-    let tokenCheck = accessToken && (await checkToken(accessToken));
+  let accessToken = localStorage.getItem('access_token');
+  let tokenCheck = accessToken && (await checkToken(accessToken));
 
-    if(!accessToken || tokenCheck.error) { //starts by checking if there is an access token or error in checking
-        await localStorage.removeItem('access_token');
-        let searchParams = new URLSearchParams(window.location.search);
-        let code = await searchParams.get('code');
+  if (!accessToken || tokenCheck.error) { //starts by checking if there is an access token or error in checking
+    await localStorage.removeItem('access_token');
+    let searchParams = new URLSearchParams(window.location.search);
+    let code = await searchParams.get('code');
 
-        if(!code) { //if no authorization code is found
-            let results = await axios.get('https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/get-auth-url');
-            let {authUrl} = results.data;
-            return (window.location.href = authUrl);
+    if (!code) { //if no authorization code is found
+      let results = await axios.get('https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/get-auth-url');
+      let { authUrl } = results.data;
+
+      return (window.location.href = authUrl);
     }
     return code && getToken(code);
-}
-return accessToken;
+  }
+  return accessToken;
 };
 
 
 let getToken = async (code) => {
-    let encodeCode = encodeURIComponent(code);
-    let {access_token} = await fetch(
-        'https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/' + encodeCode
-    )
+  let encodeCode = encodeURIComponent(code);
+  let { access_token } = await fetch(
+    'https://56a0p7pzx8.execute-api.us-west-1.amazonaws.com/dev/api/token/' + encodeCode
+  )
     .then((res) => {
-        return res.json();
+      return res.json();
     })
     .catch((error) => error);
 
-    access_token && localStorage.setItem('access_token', access_token);
+  access_token && localStorage.setItem('access_token', access_token);
 
-    return access_token;
+  return access_token;
 }

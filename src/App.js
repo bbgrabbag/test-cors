@@ -22,7 +22,7 @@ import EventGenre from './EventGenre';
 
 class App extends Component {
 
-  state={
+  state = {
     events: [],
     locations: [],
     currentLocation: 'all',
@@ -35,7 +35,7 @@ class App extends Component {
       let locationEvents = (location === 'all') ?
         events :
         events.filter((event) => event.location === location);
-        locationEvents = locationEvents.slice(0, eventCount)
+      locationEvents = locationEvents.slice(0, eventCount)
       this.setState({
         events: locationEvents,
       });
@@ -46,8 +46,8 @@ class App extends Component {
     this.setState({
       numberOfEvents: eventCount
     });
-      let currentLocation = this.state.currentLocation;
-      this.updateEvents(currentLocation, eventCount);
+    let currentLocation = this.state.currentLocation;
+    this.updateEvents(currentLocation, eventCount);
   }
 
   updateLocation = (location) => {
@@ -60,51 +60,53 @@ class App extends Component {
 
   componentDidMount() {
     this.mounted = true;
-    let accessToken = localStorage.getItem('access_token');
-
-    //the checkToken() checks whether the 'accessToken' is true or false and assign it to this variable
-    let isTokenValid = (checkToken(accessToken)).error ? false : true; 
+    let accessToken = localStorage.getItem("access_token");
     let searchParams = new URLSearchParams(window.location.search);
-    let code = searchParams.get('code');
-    this.setState({showWelcomeScreen: !code || !isTokenValid});
-    getEvents().then((events) => {
-      if (this.mounted) {
-        this.setState({ 
-          events: events.slice(0, this.state.numberOfEvents), 
-          locations: extractLocations(events) });
-      }
-    });
+    let code = searchParams.get("code");
+    //the checkToken() checks whether the 'accessToken' is true or false and assign it to this variable
+    // checkToken(accessToken)
+    if (code || accessToken) {
+      this.setState({ showWelcomeScreen: false });
+      getEvents().then((events) => {
+        if (this.mounted) {
+          this.setState({
+            events: events.slice(0, this.state.numberOfEvents),
+            locations: extractLocations(events),
+          });
+        }
+      });
+    }
   }
 
   getData = () => {
-    let {locations, events} = this.state;
-    let data = locations.map((location)=>{
+    let { locations, events } = this.state;
+    let data = locations.map((location) => {
       let number = events.filter((event) => event.location === location).length
       let city = location.split(', ').shift()
-      return {city, number};
+      return { city, number };
     })
     return data;
   };
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.mounted = false;
   }
-  
+
   render() {
 
     let showWelcomeScreen = this.state.showWelcomeScreen;
 
-    if(showWelcomeScreen) 
+    if (showWelcomeScreen)
       return <div className='App'>
-          <WelcomeScreen 
-            getAccessToken = {()=> {getAccessToken()}}
-          />
-        </div>
-    
+        <WelcomeScreen
+          getAccessToken={() => { getAccessToken() }}
+        />
+      </div>
+
 
     return (
       <div className="App">
-        <CitySearch 
+        <CitySearch
           locations={this.state.locations}
           updateLocation={this.updateLocation}
         />
@@ -114,29 +116,29 @@ class App extends Component {
           updateEventCount={this.updateEventCount}
         />
         <div className='data-vis-wrapper'>
-          <EventGenre events={this.state.events}/>
+          <EventGenre events={this.state.events} />
           <h4>Events in Each City</h4>
-            <ResponsiveContainer height={200}>
-              <ScatterChart
-                //dont need a width and height if 
-                // width={400}
-                // height={400}
-                margin={{
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                }}
-              >
-                <CartesianGrid />
-                <XAxis type="category" dataKey="city" name="city" />
-                <YAxis type="number" dataKey="number" name="number of events" allowDecimals={false}/>
-                <Tooltip cursor={{ strokeDasharray: '2 2' }} />
-                <Scatter data={this.getData()} fill="#8884d8" />
-              </ScatterChart>
-            </ResponsiveContainer>
+          <ResponsiveContainer height={200}>
+            <ScatterChart
+              //dont need a width and height if 
+              // width={400}
+              // height={400}
+              margin={{
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              <CartesianGrid />
+              <XAxis type="category" dataKey="city" name="city" />
+              <YAxis type="number" dataKey="number" name="number of events" allowDecimals={false} />
+              <Tooltip cursor={{ strokeDasharray: '2 2' }} />
+              <Scatter data={this.getData()} fill="#8884d8" />
+            </ScatterChart>
+          </ResponsiveContainer>
         </div>
-        <EventList events={this.state.events}/>
+        <EventList events={this.state.events} />
       </div>
     );
   }
